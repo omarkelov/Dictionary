@@ -1,0 +1,42 @@
+body {
+    position: relative;
+    min-width: 1040px;
+    font: 16px Trebuchet MS, sans-serif;
+    background: #d9c39c;
+}
+
+.shell {
+    position: relative;
+    overflow: hidden;
+    width: 1024px;
+    margin: 0 auto;
+}
+
+.outer-list {
+    margin: 0;
+    padding: 0;
+}
+
+.caret {
+    cursor: pointer;
+}
+
+.caret::before {
+    content: "\25B6";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;
+    transform: rotate(90deg);  
+}
+
+.caret-closed::before {
+    transform: rotate(0deg);  
+}
+
+.nested {
+    display: block;
+}
+
+.inactive {
+    display: none;
+}

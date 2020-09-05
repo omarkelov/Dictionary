@@ -33,6 +33,7 @@ public class CommonHttpHandler implements HttpHandler {
                 if (Files.isRegularFile(path)) {
                     byte[] bytes = Files.readAllBytes(path);
                     exchange.sendResponseHeaders(200, bytes.length);
+//                    System.out.println("RegularFile: " + uri);
                     oStream.write(bytes);
 
                     return;
@@ -41,6 +42,7 @@ public class CommonHttpHandler implements HttpHandler {
 
             int responseCode;
             String pageName;
+//            System.out.println("uri: " + uri);
             if (uri.equals("/")) {
                 responseCode = 200;
                 pageName = INDEX_HTML_PAGE;
@@ -52,9 +54,11 @@ public class CommonHttpHandler implements HttpHandler {
             byte[] page = Files.readAllBytes(Paths.get(RESOURCES_FOLDER + pageName));
 
             exchange.sendResponseHeaders(responseCode, page.length);
+//            System.out.println("pageName: " + pageName);
             oStream.write(page);
         } catch (IOException e) {
             System.out.println("CommonHttpHandler: " + e.getMessage());
+//            e.printStackTrace();
         }
     }
 }
