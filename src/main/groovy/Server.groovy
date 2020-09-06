@@ -2,6 +2,8 @@ import ServerManager.ServerManager
 import com.sun.net.httpserver.HttpServer
 import groovy.transform.CompileStatic
 import httphandlers.CommonHttpHandler
+import httphandlers.rest.page.CreatePageHandler
+import httphandlers.rest.page.DeletePageHandler
 
 import java.util.concurrent.Executors
 
@@ -15,8 +17,8 @@ class Server {
 
             createContext("/", new CommonHttpHandler(serverManager))
 
-//            createContext("/login", new CommonHttpHandler(mainManager, "login"))
-//            createContext("/api/method/sign.login", new LogInHandler(mainManager))
+            createContext("/api/page.create", new CreatePageHandler(serverManager: serverManager))
+            createContext("/api/page.delete", new DeletePageHandler(serverManager: serverManager))
 
             setExecutor(Executors.newCachedThreadPool())
             start()

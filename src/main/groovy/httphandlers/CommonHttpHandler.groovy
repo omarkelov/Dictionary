@@ -4,7 +4,9 @@ import ServerManager.ServerManager
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import groovy.transform.CompileStatic
+import pages.MainPage
 
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
@@ -15,6 +17,22 @@ class CommonHttpHandler implements HttpHandler {
     private static final String RESOURCES_FOLDER = "src/main/resources/"
     private static final String INDEX_HTML_PAGE = "index.html"
     private static final String NOT_FOUND_HTML_PAGE = "not-found.html"
+
+    private static final List<String> PATHS = List.of(
+        'Movies',
+        'Series',
+        'Series/Breaking Bad',
+        'Series/Westworld/Season 1',
+        'Series/Westworld/Season 1/01. The Original',
+        'Series/Westworld/Season 1/02. Chestnut',
+        'Series/Westworld/Season 1/03. The Stray',
+        'Series/Westworld/Season 1/04. Dissonance Theory',
+        'Series/Westworld/Season 1/05. Contrapasso',
+        'Series/Westworld/Season 1/06. The Adversary',
+        'Series/Westworld/Season 2',
+        'Music',
+        'Books'
+    )
 
     private final ServerManager serverManager
 
@@ -33,6 +51,7 @@ class CommonHttpHandler implements HttpHandler {
                 if (Files.isRegularFile(path)) {
                     byte[] bytes = Files.readAllBytes(path)
                     exchange.sendResponseHeaders(200, bytes.length)
+//                    println uri
                     oStream.write(bytes)
 
                     return
@@ -40,16 +59,14 @@ class CommonHttpHandler implements HttpHandler {
             } catch (InvalidPathException ignored) {}
 
             int responseCode
-            String pageName
+            byte[] page
             if (uri == "/") {
                 responseCode = 200
-                pageName = INDEX_HTML_PAGE
+                page = new MainPage(PATHS).getPage().getBytes(StandardCharsets.UTF_8)
             } else {
                 responseCode = 404
-                pageName = NOT_FOUND_HTML_PAGE
+                page = Files.readAllBytes(Paths.get(RESOURCES_FOLDER + NOT_FOUND_HTML_PAGE))
             }
-
-            byte[] page = Files.readAllBytes(Paths.get(RESOURCES_FOLDER + pageName))
 
             exchange.sendResponseHeaders(responseCode, page.length)
             oStream.write(page)
