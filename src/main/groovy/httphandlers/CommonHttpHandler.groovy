@@ -18,22 +18,6 @@ class CommonHttpHandler implements HttpHandler {
     private static final String INDEX_HTML_PAGE = "index.html"
     private static final String NOT_FOUND_HTML_PAGE = "not-found.html"
 
-    private static final List<String> PATHS = List.of(
-        'Movies',
-        'Series',
-        'Series/Breaking Bad',
-        'Series/Westworld/Season 1',
-        'Series/Westworld/Season 1/01. The Original',
-        'Series/Westworld/Season 1/02. Chestnut',
-        'Series/Westworld/Season 1/03. The Stray',
-        'Series/Westworld/Season 1/04. Dissonance Theory',
-        'Series/Westworld/Season 1/05. Contrapasso',
-        'Series/Westworld/Season 1/06. The Adversary',
-        'Series/Westworld/Season 2',
-        'Music',
-        'Books'
-    )
-
     private final ServerManager serverManager
 
     CommonHttpHandler(ServerManager serverManager) {
@@ -62,7 +46,7 @@ class CommonHttpHandler implements HttpHandler {
             byte[] page
             if (uri == "/") {
                 responseCode = 200
-                page = new MainPage(PATHS).getPage().getBytes(StandardCharsets.UTF_8)
+                page = new MainPage(serverManager.getPages()).getPage().getBytes(StandardCharsets.UTF_8)
             } else {
                 responseCode = 404
                 page = Files.readAllBytes(Paths.get(RESOURCES_FOLDER + NOT_FOUND_HTML_PAGE))

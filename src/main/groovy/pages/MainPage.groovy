@@ -3,14 +3,14 @@ package pages
 import groovy.transform.CompileStatic
 import util.PathTree
 
-import static util.PathTree.ROOT_NAME
+import static Server.SITE_NAME
 
 @CompileStatic
 class MainPage extends Page {
     private String outerList
 
     MainPage(Collection<String> paths) {
-        PathTree pathTree = new PathTree(level: 0, name: ROOT_NAME  ).tap {
+        PathTree pathTree = new PathTree(level: 0, name: SITE_NAME).tap {
             insertAll(paths)
         }
 

@@ -5,6 +5,7 @@
 build/
 gradle/
 out/
+src/main/resources/database
 src/main/resources/js/libs
 
 # Files

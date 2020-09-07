@@ -2,10 +2,10 @@ package util
 
 import groovy.transform.CompileStatic
 
+import static Server.SITE_NAME
+
 @CompileStatic
 class PathTree implements Comparable<PathTree>, Iterable<PathTree> {
-    public static final String ROOT_NAME = 'localhost'
-
     int level
     String name
     PathTree parent
@@ -31,7 +31,7 @@ class PathTree implements Comparable<PathTree>, Iterable<PathTree> {
         ArrayList<String> names = new ArrayList<>()
 
         PathTree pathTree = this
-        while (pathTree.name != ROOT_NAME) {
+        while (pathTree.name != SITE_NAME) {
             names.add(pathTree.name)
 
             pathTree = pathTree.parent

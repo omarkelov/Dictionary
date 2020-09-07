@@ -9,6 +9,8 @@ import java.util.concurrent.Executors
 
 @CompileStatic
 class Server {
+    public static final String SITE_NAME = 'localhost'
+
     static void main(String[] args) {
         ServerManager serverManager = new ServerManager()
 
