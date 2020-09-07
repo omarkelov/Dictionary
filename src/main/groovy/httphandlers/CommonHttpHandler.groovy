@@ -1,10 +1,10 @@
 package httphandlers
 
-import ServerManager.ServerManager
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import groovy.transform.CompileStatic
 import pages.MainPage
+import server.ServerManager
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files

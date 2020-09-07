@@ -1,9 +1,9 @@
-import ServerManager.ServerManager
 import com.sun.net.httpserver.HttpServer
 import groovy.transform.CompileStatic
 import httphandlers.CommonHttpHandler
 import httphandlers.rest.page.CreatePageHandler
 import httphandlers.rest.page.DeletePageHandler
+import server.ServerManager
 
 import java.util.concurrent.Executors
 

@@ -18,7 +18,7 @@ function activateListeners() {
     });
 
     $('.button-delete').on('click', function() {
-        if (confirm("Are you sure you want to delete this page? This action cannot be undone!")) {
+        if (confirm('Are you sure you want to delete this page? This action cannot be undone!')) {
             sendAjax('page.delete?url=' + $(this).siblings('a').attr('href'), function(result, status, xhr) {
                 alert("Result: " + result + "\nStatus: " + status);
             });

@@ -1,4 +1,4 @@
-package server.database
+package server
 
 import exceptions.ProcessingException
 import groovy.transform.CompileStatic
