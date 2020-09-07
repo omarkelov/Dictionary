@@ -1,4 +1,4 @@
-package ServerManager
+package server
 
 import groovy.transform.CompileStatic
 
