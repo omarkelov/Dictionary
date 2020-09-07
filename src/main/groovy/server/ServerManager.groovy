@@ -17,13 +17,11 @@ class ServerManager {
 
     void createPage(String url) {
 //        println "Create: $url"
-        dbHandler.insertPath(url)
+        dbHandler.insertPath(url.replaceAll('^/+', ''))
     }
 
-    void deletePage(String url) {
+    void deletePage(String url) { // TODO remove parents
 //        println "Delete: $url"
-        dbHandler.getPaths().each {
-            println it
-        }
+        dbHandler.deletePath(url)
     }
 }

@@ -46,8 +46,7 @@ class MainPage extends Page {
 
     @Override
     String getPage() {
-        """
-<!DOCTYPE html>
+"""<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -69,7 +68,6 @@ class MainPage extends Page {
             ${prependIndents(outerList, 3)}
         </section>
     </body>
-</html>
-        """
+</html>"""
     }
 }
