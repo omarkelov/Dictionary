@@ -14,11 +14,13 @@ class GenericPageHandler implements HttpHandler {
         try (OutputStream oStream = exchange.getResponseBody()) {
             String uri = exchange.getRequestURI().toString()
 
-            // TODO if (uri == )
-
-            byte[] page = uri.getBytes()
-            exchange.sendResponseHeaders(200, page.length)
-            oStream.write(page)
+            if (serverManager.pathExists(uri)) {
+                byte[] page = uri.getBytes()
+                exchange.sendResponseHeaders(200, page.length)
+                oStream.write(page)
+            } else {
+                exchange.sendResponseHeaders(404, 0)
+            }
         } catch (IOException e) {
             println "CommonHttpHandler: ${e.getMessage()}"
 //            e.printStackTrace()

@@ -47,6 +47,20 @@ class SQLiteDatabaseHandler {
         paths
     }
 
+    boolean exists(String path) {
+        boolean result
+
+        executeStatement({ Statement statement ->
+            ResultSet resultSet = statement.executeQuery("""
+                SELECT count(*) FROM $PathTable.NAME WHERE $PathTable.Cols.PATH = '$path';
+            """)
+
+            result = resultSet.getInt('count(*)') > 0
+        })
+
+        return result
+    }
+
     void insertPath(String path) {
         executeStatement({ Statement statement ->
             statement.execute("""
@@ -71,6 +85,7 @@ class SQLiteDatabaseHandler {
         ) {
             closure.call(statement)
         } catch (SQLException e) {
+//            e.printStackTrace()
             throw new ProcessingException(e.getMessage())
         }
     }
