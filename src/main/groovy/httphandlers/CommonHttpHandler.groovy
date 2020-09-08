@@ -18,11 +18,7 @@ class CommonHttpHandler implements HttpHandler {
     private static final String INDEX_HTML_PAGE = "index.html"
     private static final String NOT_FOUND_HTML_PAGE = "not-found.html"
 
-    private final ServerManager serverManager
-
-    CommonHttpHandler(ServerManager serverManager) {
-        this.serverManager = serverManager
-    }
+    ServerManager serverManager
 
     @Override
     void handle(HttpExchange exchange) {
