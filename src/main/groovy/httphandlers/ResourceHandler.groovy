@@ -5,6 +5,8 @@ import com.sun.net.httpserver.HttpHandler
 import groovy.transform.CompileStatic
 
 import java.nio.file.Files
+import java.nio.file.InvalidPathException
+import java.nio.file.Path
 import java.nio.file.Paths
 
 import static Server.RESOURCES_DIRECTORY
@@ -16,11 +18,21 @@ class ResourceHandler implements HttpHandler {
         try (OutputStream oStream = exchange.getResponseBody()) {
             String uri = exchange.getRequestURI().toString()
 
-            String fileName = RESOURCES_DIRECTORY + uri
-            byte[] bytes = Files.readAllBytes(Paths.get(fileName))
+            byte[] resource
+            try {
+                String fileName = RESOURCES_DIRECTORY + uri
+                Path path = Paths.get(fileName)
+                if (Files.isRegularFile(path)) {
+                    resource = Files.readAllBytes(path)
+                }
+            } catch (InvalidPathException ignored) {}
 
-            exchange.sendResponseHeaders(200, bytes.length)
-            oStream.write(bytes)
+            if (resource) {
+                exchange.sendResponseHeaders(200, resource.length)
+                oStream.write(resource)
+            } else {
+                exchange.sendResponseHeaders(404, 0)
+            }
         } catch (IOException e) {
             println "ResourceHandler: ${e.getMessage()}"
 //            e.printStackTrace()

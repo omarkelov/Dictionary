@@ -17,6 +17,8 @@ class Server {
     public static final String RESOURCES_DIRECTORY = "src/main/resources/"
     public static final String DATABASE_DIRECTORY = "${RESOURCES_DIRECTORY}database"
 
+    public static final String NOT_FOUND_HTML_PAGE = "not-found.html" // TODO move
+
     static void main(String[] args) {
         ServerManager serverManager = new ServerManager()
 
