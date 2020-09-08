@@ -32,10 +32,10 @@ class MainPage extends Page {
             currentLevel = it.level
         }
 
-        concatWithIndent(--indent, '</ul>\n')
-        concatWithIndent(--indent, '</li>\n')
-        concatWithIndent(--indent, '</ul>\n')
-        concatWithIndent(--indent, '</li>\n')
+        (currentLevel + 1).times {
+            concatWithIndent(--indent, '</ul>\n')
+            concatWithIndent(--indent, '</li>\n')
+        }
         concatWithIndent(--indent, '</ul>\n')
     }
 
