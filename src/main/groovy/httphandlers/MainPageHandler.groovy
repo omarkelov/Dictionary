@@ -17,7 +17,7 @@ class MainPageHandler implements HttpHandler {
         try (OutputStream oStream = exchange.getResponseBody()) {
             String uri = exchange.getRequestURI().toString()
 
-            if (uri == "/") {
+            if (uri == '/') {
                 byte[] page = new MainPage(serverManager.getPages()).getPage().getBytes(StandardCharsets.UTF_8)
                 exchange.sendResponseHeaders(200, page.length)
                 oStream.write(page)

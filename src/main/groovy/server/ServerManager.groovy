@@ -13,24 +13,20 @@ class ServerManager {
     }
 
     Collection<String> getPages() {
-        return dbHandler.getPaths()
+        dbHandler.getPaths()
     }
 
     boolean pathExists(String url) {
-        dbHandler.exists(validatePath(url))
+        dbHandler.exists(url)
     }
 
     void createPage(String url) {
 //        println "Create: $url"
-        dbHandler.insertPath(validatePath(url))
+        dbHandler.insertPath(url)
     }
 
     void deletePage(String url) { // TODO remove parents
 //        println "Delete: $url"
-        dbHandler.deletePath(validatePath(url))
-    }
-
-    private String validatePath(String url) {
-        URLDecoder.decode(url, StandardCharsets.UTF_8).replaceAll('^/+', '')
+        dbHandler.deletePath(url)
     }
 }

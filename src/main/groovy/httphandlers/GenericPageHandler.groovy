@@ -3,6 +3,7 @@ package httphandlers
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import groovy.transform.CompileStatic
+import httphandlers.util.HandlerUtils
 import server.ServerManager
 
 @CompileStatic
@@ -13,6 +14,8 @@ class GenericPageHandler implements HttpHandler {
     void handle(HttpExchange exchange) {
         try (OutputStream oStream = exchange.getResponseBody()) {
             String uri = exchange.getRequestURI().toString()
+            uri = HandlerUtils.decodeUrl(uri)
+            uri = HandlerUtils.trimLeadingSlashes(uri)
 
             if (serverManager.pathExists(uri)) {
                 byte[] page = uri.getBytes()

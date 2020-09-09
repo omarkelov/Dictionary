@@ -48,7 +48,7 @@ class SQLiteDatabaseHandler {
     }
 
     boolean exists(String path) {
-        boolean result
+        boolean result = false
 
         executeStatement({ Statement statement ->
             ResultSet resultSet = statement.executeQuery("""
