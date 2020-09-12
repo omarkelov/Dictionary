@@ -3,8 +3,9 @@ import groovy.transform.CompileStatic
 import httphandlers.GenericPageHandler
 import httphandlers.MainPageHandler
 import httphandlers.ResourceHandler
-import httphandlers.rest.page.CreatePageHandler
-import httphandlers.rest.page.DeletePageHandler
+import httphandlers.rest.page.PageCreateHandler
+import httphandlers.rest.page.PageDeleteHandler
+import httphandlers.rest.phrase.PhrasesAddHandler
 import server.ServerManager
 
 import java.nio.file.Files
@@ -18,17 +19,17 @@ class Server {
     public static final String DATABASE_DIRECTORY = "${RESOURCES_DIRECTORY}database"
 
     static void main(String[] args) {
-        ServerManager serverManager = new ServerManager()
-
         HttpServer server = HttpServer.create().tap {
             bind(new InetSocketAddress(80), 0)
             setExecutor(Executors.newCachedThreadPool())
-
-            createContext("/", new MainPageHandler(serverManager: serverManager))
-
-            createContext("/api/page.create", new CreatePageHandler(serverManager: serverManager))
-            createContext("/api/page.delete", new DeletePageHandler(serverManager: serverManager))
         }
+
+        ServerManager serverManager = new ServerManager(server)
+
+        server.createContext("/", new MainPageHandler(serverManager: serverManager))
+        server.createContext("/api/page.create", new PageCreateHandler(serverManager: serverManager))
+        server.createContext("/api/page.delete", new PageDeleteHandler(serverManager: serverManager))
+        server.createContext("/api/phrases.add", new PhrasesAddHandler(serverManager: serverManager))
 
         Files.walk(Paths.get(RESOURCES_DIRECTORY))
             .filter(path -> !path.startsWith(DATABASE_DIRECTORY) && Files.isRegularFile(path))

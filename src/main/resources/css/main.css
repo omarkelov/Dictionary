@@ -30,3 +30,7 @@ ul {
 .button.hovering {
     display: inline;
 }
+
+.text-field {
+    width: 100%;
+}

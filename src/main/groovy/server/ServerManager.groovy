@@ -1,14 +1,18 @@
 package server
 
+import com.sun.net.httpserver.HttpServer
 import groovy.transform.CompileStatic
-
-import java.nio.charset.StandardCharsets
+import httphandlers.GenericPageHandler
+import server.beans.PathBean
+import server.beans.PhrasesBean
 
 @CompileStatic
 class ServerManager {
+    private HttpServer server
     private SQLiteDatabaseHandler dbHandler
 
-    ServerManager() {
+    ServerManager(HttpServer server) {
+        this.server = server
         dbHandler = new SQLiteDatabaseHandler()
     }
 
@@ -20,13 +24,23 @@ class ServerManager {
         dbHandler.exists(url)
     }
 
-    void createPage(String url) {
-//        println "Create: $url"
-        dbHandler.insertPath(url)
+    void createPage(PathBean pathBean) {
+        pathBean.uuid = UUID.randomUUID()
+        dbHandler.insertPath(pathBean)
+        server.createContext("/$pathBean.path", new GenericPageHandler(serverManager: this))
     }
 
-    void deletePage(String url) { // TODO remove parents
-//        println "Delete: $url"
-        dbHandler.deletePath(url)
+    void deletePage(PathBean pathBean) { // TODO remove parents
+        dbHandler.deletePath(pathBean.path)
+        server.removeContext("/$pathBean.path")
+    }
+
+    void addPhrases(PhrasesBean phrasesBean) {
+        phrasesBean.uuid = UUID.randomUUID()
+        phrasesBean.phrases.each {
+            it.uuid = UUID.randomUUID()
+        }
+
+        dbHandler.insertPhrases(phrasesBean)
     }
 }

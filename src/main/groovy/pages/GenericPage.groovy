@@ -1,0 +1,35 @@
+package pages
+
+import groovy.transform.CompileStatic
+
+@CompileStatic
+class GenericPage extends Page {
+    @Override
+    String getPage() {
+"""<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Dictionary</title>
+        <link rel="shortcut icon" href="/images/icon.png" type="image/x-icon">
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/css/reset.css">
+        <link rel="stylesheet" href="/css/main.css">
+        <script src="/js/libs/jquery-3.5.1.min.js"></script>
+        <script src="/js/main.js"></script>
+        <script>
+            \$(document).ready(function() {
+                activateGenericListeners();
+            });
+        </script>
+    </head>
+    <body>
+        <section class="shell">
+            <textarea name="text-field" id="text-field" class="text-field" rows="10"></textarea>
+            <div id="phrase-details"></div>
+            <button id="submit">Submit</button>
+        </section>
+    </body>
+</html>"""
+    }
+}

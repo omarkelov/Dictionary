@@ -2,6 +2,8 @@ package server
 
 import exceptions.ProcessingException
 import groovy.transform.CompileStatic
+import server.beans.PathBean
+import server.beans.PhrasesBean
 
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -24,8 +26,30 @@ class SQLiteDatabaseHandler {
         executeStatement({ Statement statement ->
             statement.execute("""
                 CREATE TABLE IF NOT EXISTS $PathTable.NAME (
+                    $PathTable.Cols.UUID TEXT NOT NULL,
                     $PathTable.Cols.PATH TEXT NOT NULL,
-                    UNIQUE($PathTable.Cols.PATH)
+                    UNIQUE($PathTable.Cols.UUID, $PathTable.Cols.PATH)
+                );
+            """)
+
+            statement.execute("""
+                CREATE TABLE IF NOT EXISTS $TextTable.NAME (
+                    $TextTable.Cols.UUID TEXT NOT NULL,
+                    $TextTable.Cols.PATH_ID TEXT NOT NULL,
+                    $TextTable.Cols.TEXT TEXT NOT NULL,
+                    UNIQUE($TextTable.Cols.UUID)
+                );
+            """)
+
+            statement.execute("""
+                CREATE TABLE IF NOT EXISTS $PhrasesTable.NAME (
+                    $PhrasesTable.Cols.UUID TEXT NOT NULL,
+                    $PhrasesTable.Cols.TEXT_ID TEXT NOT NULL,
+                    $PhrasesTable.Cols.PHRASE TEXT NOT NULL,
+                    $PhrasesTable.Cols.CORRECTED_PHRASE TEXT NOT NULL,
+                    $PhrasesTable.Cols.TYPE TEXT NOT NULL,
+                    $PhrasesTable.Cols.TRANSLATION TEXT NOT NULL,
+                    UNIQUE($PhrasesTable.Cols.UUID)
                 );
             """)
         })
@@ -35,12 +59,14 @@ class SQLiteDatabaseHandler {
         ArrayList<String> paths = new ArrayList<>()
 
         executeStatement({ Statement statement ->
-            ResultSet resultSet = statement.executeQuery("""
-                SELECT $PathTable.Cols.PATH FROM $PathTable.NAME;
-            """)
-
-            while (resultSet.next()) {
-                paths.add(resultSet.getString(PathTable.Cols.PATH))
+            try (
+                ResultSet resultSet = statement.executeQuery("""
+                    SELECT $PathTable.Cols.PATH FROM $PathTable.NAME;
+                """)
+            ) {
+                while (resultSet.next()) {
+                    paths.add(resultSet.getString(PathTable.Cols.PATH))
+                }
             }
         })
 
@@ -51,21 +77,23 @@ class SQLiteDatabaseHandler {
         boolean result = false
 
         executeStatement({ Statement statement ->
-            ResultSet resultSet = statement.executeQuery("""
-                SELECT count(*) FROM $PathTable.NAME WHERE $PathTable.Cols.PATH = '$path';
-            """)
-
-            result = resultSet.getInt('count(*)') > 0
+            try (
+                ResultSet resultSet = statement.executeQuery("""
+                    SELECT count(*) FROM $PathTable.NAME WHERE $PathTable.Cols.PATH = '$path';
+                """)
+            ) {
+                result = resultSet.getInt('count(*)') > 0
+            }
         })
 
-        return result
+        result
     }
 
-    void insertPath(String path) {
+    void insertPath(PathBean pagePath) {
         executeStatement({ Statement statement ->
             statement.execute("""
-                INSERT INTO $PathTable.NAME ($PathTable.Cols.PATH)
-                VALUES('$path');
+                INSERT INTO $PathTable.NAME ($PathTable.Cols.UUID, $PathTable.Cols.PATH)
+                VALUES ('$pagePath.uuid', '$pagePath.path');
             """)
         })
     }
@@ -75,6 +103,53 @@ class SQLiteDatabaseHandler {
             statement.execute("""
                 DELETE FROM $PathTable.NAME WHERE $PathTable.Cols.PATH = '$path';
             """)
+        })
+    }
+
+    void insertPhrases(PhrasesBean phrasesBean) {
+        /*println phrasesBean.path
+        println phrasesBean.text
+        phrasesBean.phrases.each {
+            println it.phrase
+            println it.correctedPhrase
+            println it.type
+            println it.translation
+        }*/
+        executeStatement({ Statement statement ->
+            String pathId
+
+            try (
+                ResultSet resultSet = statement.executeQuery("""
+                    SELECT $PathTable.Cols.UUID FROM $PathTable.NAME WHERE $PathTable.Cols.PATH = '$phrasesBean.path';
+                """)
+            ) {
+                pathId = resultSet.getString(PathTable.Cols.UUID)
+            }
+
+            statement.execute("""
+                INSERT INTO $TextTable.NAME ($TextTable.Cols.UUID, $TextTable.Cols.PATH_ID, $TextTable.Cols.TEXT)
+                VALUES ('$phrasesBean.uuid', '$pathId', '$phrasesBean.text');
+            """)
+
+            phrasesBean.phrases.each {
+                statement.execute("""
+                    INSERT INTO $PhrasesTable.NAME (
+                        $PhrasesTable.Cols.UUID,
+                        $PhrasesTable.Cols.TEXT_ID,
+                        $PhrasesTable.Cols.PHRASE,
+                        $PhrasesTable.Cols.CORRECTED_PHRASE,
+                        $PhrasesTable.Cols.TYPE,
+                        $PhrasesTable.Cols.TRANSLATION
+                    ) VALUES (
+                        '$it.uuid',
+                        '$phrasesBean.uuid',
+                        '$it.phrase',
+                        '$it.correctedPhrase',
+                        '$it.type',
+                        '$it.translation'
+                    );
+                """)
+            }
         })
     }
 
@@ -91,11 +166,34 @@ class SQLiteDatabaseHandler {
     }
 
     private static final class PathTable {
-        public static final String NAME = "paths"
+        public static final String NAME = 'Paths'
 
         static final class Cols {
-            public static final String PATH = "path"
-            public static final String DATE = "date"
+            public static final String UUID = 'UUID'
+            public static final String PATH = 'Path'
+        }
+    }
+
+    private static final class TextTable {
+        public static final String NAME = 'Text'
+
+        static final class Cols {
+            public static final String UUID = 'UUID'
+            public static final String PATH_ID = 'PathId'
+            public static final String TEXT = 'Text'
+        }
+    }
+
+    private static final class PhrasesTable {
+        public static final String NAME = 'Phrases'
+
+        static final class Cols {
+            public static final String UUID = 'UUID'
+            public static final String TEXT_ID = 'TextId'
+            public static final String PHRASE = 'Phrase'
+            public static final String CORRECTED_PHRASE = 'CorrectedPhrase'
+            public static final String TYPE = 'Type'
+            public static final String TRANSLATION = 'Translation'
         }
     }
 }

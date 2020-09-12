@@ -4,7 +4,10 @@ import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import groovy.transform.CompileStatic
 import httphandlers.util.HandlerUtils
+import pages.GenericPage
 import server.ServerManager
+
+import java.nio.charset.StandardCharsets
 
 @CompileStatic
 class GenericPageHandler implements HttpHandler {
@@ -18,7 +21,7 @@ class GenericPageHandler implements HttpHandler {
             uri = HandlerUtils.trimLeadingSlashes(uri)
 
             if (serverManager.pathExists(uri)) {
-                byte[] page = uri.getBytes()
+                byte[] page = new GenericPage().getPage().getBytes(StandardCharsets.UTF_8)
                 exchange.sendResponseHeaders(200, page.length)
                 oStream.write(page)
             } else {

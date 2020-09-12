@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import exceptions.ProcessingException
 import groovy.transform.CompileStatic
+import httphandlers.util.HandlerUtils
 import httphandlers.util.Responder
 
 @CompileStatic
@@ -16,6 +17,7 @@ abstract class RestHandler implements HttpHandler {
             try {
                 respond(exchange, responder)
             } catch (ProcessingException e) {
+                println(e.getMessage())
                 responder.sendError(e.getMessage())
             }
         } catch (IOException|RuntimeException e) {
@@ -23,6 +25,11 @@ abstract class RestHandler implements HttpHandler {
         } finally {
             exchange.close()
         }
+    }
+
+    protected String getJson(HttpExchange exchange) {
+        String[] uriParts = exchange.getRequestURI().toString().split('/')
+        HandlerUtils.decodeUrl(uriParts[uriParts.length - 1])
     }
 
     protected abstract void respond(HttpExchange exchange, Responder responder) throws IOException
