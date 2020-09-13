@@ -34,3 +34,7 @@ ul {
 .text-field {
     width: 100%;
 }
+
+.phrase {
+    background: rgba(0, 255, 0, 0.45);
+}

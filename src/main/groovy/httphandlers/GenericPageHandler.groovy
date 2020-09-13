@@ -21,7 +21,7 @@ class GenericPageHandler implements HttpHandler {
             uri = HandlerUtils.trimLeadingSlashes(uri)
 
             if (serverManager.pathExists(uri)) {
-                byte[] page = new GenericPage().getPage().getBytes(StandardCharsets.UTF_8)
+                byte[] page = new GenericPage(serverManager.getParagraphs(uri)).getPage().getBytes(StandardCharsets.UTF_8)
                 exchange.sendResponseHeaders(200, page.length)
                 oStream.write(page)
             } else {

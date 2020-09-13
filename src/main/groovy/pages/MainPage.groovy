@@ -7,14 +7,14 @@ import static Server.SITE_NAME
 
 @CompileStatic
 class MainPage extends Page {
-    private String outerList
+    private String htmlPathList
 
     MainPage(Collection<String> paths) {
         PathTree pathTree = new PathTree(level: 0, name: SITE_NAME).tap {
             insertAll(paths)
         }
 
-        outerList = '<ul id="outer-list" class="outer-list">\n'
+        htmlPathList = '<ul id="outer-list" class="outer-list">\n' // TODO use StringBuilder
 
         int currentLevel = 0
         int indent = 1
@@ -40,8 +40,8 @@ class MainPage extends Page {
     }
 
     private void concatWithIndent(int indents, String str) {
-        indents.times {outerList += INDENT}
-        outerList += str
+        indents.times {htmlPathList += INDENT}
+        htmlPathList += str
     }
 
     @Override
@@ -65,7 +65,7 @@ class MainPage extends Page {
     </head>
     <body>
         <section class="shell">
-            ${prependIndents(outerList, 3)}
+            ${prependIndents(htmlPathList, 3)}
         </section>
     </body>
 </html>"""

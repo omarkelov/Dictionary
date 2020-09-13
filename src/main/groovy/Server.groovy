@@ -5,7 +5,7 @@ import httphandlers.MainPageHandler
 import httphandlers.ResourceHandler
 import httphandlers.rest.page.PageCreateHandler
 import httphandlers.rest.page.PageDeleteHandler
-import httphandlers.rest.phrase.PhrasesAddHandler
+import httphandlers.rest.paragraph.ParagraphAddHandler
 import server.ServerManager
 
 import java.nio.file.Files
@@ -29,7 +29,7 @@ class Server {
         server.createContext("/", new MainPageHandler(serverManager: serverManager))
         server.createContext("/api/page.create", new PageCreateHandler(serverManager: serverManager))
         server.createContext("/api/page.delete", new PageDeleteHandler(serverManager: serverManager))
-        server.createContext("/api/phrases.add", new PhrasesAddHandler(serverManager: serverManager))
+        server.createContext("/api/paragraph.add", new ParagraphAddHandler(serverManager: serverManager))
 
         Files.walk(Paths.get(RESOURCES_DIRECTORY))
             .filter(path -> !path.startsWith(DATABASE_DIRECTORY) && Files.isRegularFile(path))

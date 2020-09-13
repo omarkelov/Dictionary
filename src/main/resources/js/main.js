@@ -80,14 +80,14 @@ function activateGenericListeners() {
     });
     
     $('#submit').on('click', function() {
-        var phraseData = {
+        var paragraph = {
             path: document.location.pathname,
-            text: $('#text-field').val().replace(/(\{|\})/g, ''),
+            paragraph: $('#text-field').val().replace(/(\{|\})/g, ''),
             phrases: []
         };
         
         $('.phrase-shell').each(function() {
-            phraseData.phrases.push({
+            paragraph.phrases.push({
                 phrase: $(this).find('[name="phrase"]').val(),
                 correctedPhrase: $(this).find('[name="corrected-phrase"]').val(),
                 type: $(this).find('[name="type"]').val(),
@@ -95,7 +95,7 @@ function activateGenericListeners() {
             });
         });
         
-        sendJsonWithAjax('phrases.add', phraseData, function(result, status, xhr) {
+        sendJsonWithAjax('paragraph.add', paragraph, function(result, status, xhr) {
             
         });
     });

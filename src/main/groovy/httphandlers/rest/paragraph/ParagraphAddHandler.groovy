@@ -1,4 +1,4 @@
-package httphandlers.rest.phrase
+package httphandlers.rest.paragraph
 
 import com.google.gson.Gson
 import com.sun.net.httpserver.HttpExchange
@@ -7,18 +7,18 @@ import httphandlers.rest.RestHandler
 import httphandlers.util.HandlerUtils
 import httphandlers.util.Responder
 import server.ServerManager
-import server.beans.PhrasesBean
+import server.beans.ParagraphBean
 
 @CompileStatic
-class PhrasesAddHandler extends RestHandler {
+class ParagraphAddHandler extends RestHandler {
     ServerManager serverManager
 
     @Override
     protected void respond(HttpExchange exchange, Responder responder) throws IOException {
-        PhrasesBean phrasesBean = new Gson().fromJson(getJson(exchange), PhrasesBean)
+        ParagraphBean phrasesBean = new Gson().fromJson(getJson(exchange), ParagraphBean)
         phrasesBean.path = HandlerUtils.trimLeadingSlashes(phrasesBean.path)
 
-        serverManager.addPhrases(phrasesBean)
+        serverManager.addParagraph(phrasesBean)
 
         responder.sendResponse()
     }

@@ -3,9 +3,9 @@ package server.beans
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class PhrasesBean {
+class ParagraphBean {
     String uuid
     String path
-    String text
+    String paragraph
     PhraseBean[] phrases
 }

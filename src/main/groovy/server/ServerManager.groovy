@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpServer
 import groovy.transform.CompileStatic
 import httphandlers.GenericPageHandler
 import server.beans.PathBean
-import server.beans.PhrasesBean
+import server.beans.ParagraphBean
 
 @CompileStatic
 class ServerManager {
@@ -35,12 +35,16 @@ class ServerManager {
         server.removeContext("/$pathBean.path")
     }
 
-    void addPhrases(PhrasesBean phrasesBean) {
-        phrasesBean.uuid = UUID.randomUUID()
-        phrasesBean.phrases.each {
+    void addParagraph(ParagraphBean paragraph) {
+        paragraph.uuid = UUID.randomUUID()
+        paragraph.phrases.each {
             it.uuid = UUID.randomUUID()
         }
 
-        dbHandler.insertPhrases(phrasesBean)
+        dbHandler.insertParagraph(paragraph)
+    }
+
+    Collection<ParagraphBean> getParagraphs(String path) {
+        dbHandler.getParagraphs(path)
     }
 }
