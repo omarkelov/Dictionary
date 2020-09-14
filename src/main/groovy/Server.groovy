@@ -23,6 +23,17 @@ class Server {
     public static final String MAIN_PAGE_NAME = 'main'
     public static final String PARAGRAPHS_PAGE_NAME = 'paragraphs'
 
+    private static final class Api {
+        static final class Page {
+            public static final String CREATE = '/api/page.create'
+            public static final String DELETE = '/api/page.delete'
+        }
+
+        static final class Paragraph {
+            public static final String ADD = '/api/paragraph.add'
+        }
+    }
+
     static void main(String[] args) {
         HttpServer server = HttpServer.create().tap {
             bind(new InetSocketAddress(80), 0)
@@ -36,9 +47,9 @@ class Server {
         )
 
         server.createContext('/', new MainPageHandler(serverManager: serverManager))
-        server.createContext('/api/page.create', new PageCreateHandler(serverManager: serverManager))
-        server.createContext('/api/page.delete', new PageDeleteHandler(serverManager: serverManager))
-        server.createContext('/api/paragraph.add', new ParagraphAddHandler(serverManager: serverManager))
+        server.createContext(Api.Page.CREATE, new PageCreateHandler(serverManager: serverManager))
+        server.createContext(Api.Page.DELETE, new PageDeleteHandler(serverManager: serverManager))
+        server.createContext(Api.Paragraph.ADD, new ParagraphAddHandler(serverManager: serverManager))
 
         Files.walk(Paths.get(RESOURCES_DIRECTORY))
             .filter(path -> !path.startsWith(DATABASE_DIRECTORY) && Files.isRegularFile(path))
