@@ -14,15 +14,16 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
+import static Server.DATABASE_DIRECTORY
+
 @CompileStatic
 class SQLiteDatabaseHandler {
-    private static final String DB_DIRECTORY = 'src/main/resources/database/'
     private static final String DB_FILENAME = 'database.db'
     private static final String DB_PREFIX = "jdbc:sqlite:"
-    private static final String DB_URL = "$DB_PREFIX$DB_DIRECTORY$DB_FILENAME"
+    private static final String DB_URL = "$DB_PREFIX$DATABASE_DIRECTORY$DB_FILENAME"
 
     SQLiteDatabaseHandler() {
-        Files.createDirectories(Paths.get(DB_DIRECTORY))
+        Files.createDirectories(Paths.get(DATABASE_DIRECTORY))
 
         executeStatement({ Statement statement ->
             statement.execute("""

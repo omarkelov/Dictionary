@@ -26,7 +26,7 @@ function activateListeners() {
     });
 }
 
-function activateGenericListeners() {
+function activateParagraphsListeners() {
     var textField = $('#text-field');
     
     textField[0].onpaste = function(e) {

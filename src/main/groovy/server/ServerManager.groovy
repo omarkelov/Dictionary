@@ -2,21 +2,23 @@ package server
 
 import com.sun.net.httpserver.HttpServer
 import groovy.transform.CompileStatic
-import httphandlers.GenericPageHandler
-import server.beans.PathBean
+import httphandlers.ParagraphsPageHandler
 import server.beans.ParagraphBean
+import server.beans.PathBean
 
 @CompileStatic
 class ServerManager {
     private HttpServer server
     private SQLiteDatabaseHandler dbHandler
+    private TemplateManager templateManager
 
-    ServerManager(HttpServer server) {
+    ServerManager(HttpServer server, SQLiteDatabaseHandler dbHandler, TemplateManager templateManager) {
         this.server = server
-        dbHandler = new SQLiteDatabaseHandler()
+        this.dbHandler = dbHandler
+        this.templateManager = templateManager
     }
 
-    Collection<String> getPages() {
+    Collection<String> getPaths() {
         dbHandler.getPaths()
     }
 
@@ -27,7 +29,7 @@ class ServerManager {
     void createPage(PathBean pathBean) {
         pathBean.uuid = UUID.randomUUID()
         dbHandler.insertPath(pathBean)
-        server.createContext("/$pathBean.path", new GenericPageHandler(serverManager: this))
+        server.createContext("/$pathBean.path", new ParagraphsPageHandler(serverManager: this))
     }
 
     void deletePage(PathBean pathBean) { // TODO remove parents
@@ -46,5 +48,9 @@ class ServerManager {
 
     Collection<ParagraphBean> getParagraphs(String path) {
         dbHandler.getParagraphs(path)
+    }
+
+    TemplateManager getTemplateManager() {
+        templateManager
     }
 }

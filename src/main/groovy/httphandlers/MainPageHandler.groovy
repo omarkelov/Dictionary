@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import groovy.transform.CompileStatic
 import pages.MainPage
+import pages.Page
 import server.ServerManager
 
 import java.nio.charset.StandardCharsets
@@ -18,9 +19,10 @@ class MainPageHandler implements HttpHandler {
             String uri = exchange.getRequestURI().toString()
 
             if (uri == '/') {
-                byte[] page = new MainPage(serverManager.getPages()).getPage().getBytes(StandardCharsets.UTF_8)
-                exchange.sendResponseHeaders(200, page.length)
-                oStream.write(page)
+                Page page = new MainPage(serverManager.getTemplateManager(), serverManager.getPaths())
+                byte[] pageBytes = page.generatePage().getBytes(StandardCharsets.UTF_8)
+                exchange.sendResponseHeaders(200, pageBytes.length)
+                oStream.write(pageBytes)
             } else {
                 exchange.sendResponseHeaders(404, 0)
             }
